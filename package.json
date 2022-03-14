@@ -1,5 +1,5 @@
 {
-  "name": "axios-rate-limit",
+  "name": "@rafaelgomesxyz/axios-rate-limit",
   "description": "Rate limit for axios.",
   "version": "1.3.1",
   "license": "MIT",
