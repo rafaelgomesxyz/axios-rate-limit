@@ -92,6 +92,12 @@ AxiosRateLimit.prototype.shift = function () {
   var queued = this.queue.shift()
   queued.resolve()
 
+	if (queued.request.signal && queued.request.signal.aborted) {
+		this.shift()
+
+		return
+	}
+
   if (this.timeslotRequests === 0) {
     this.timeoutId = setTimeout(function () {
       this.timeslotRequests = 0
