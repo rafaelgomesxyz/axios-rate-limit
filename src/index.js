@@ -51,7 +51,7 @@ AxiosRateLimit.prototype.enable = function (axios) {
 
 AxiosRateLimit.prototype.handleRequest = function (request) {
   return new Promise(function (resolve) {
-    this.push({ resolve: function () { resolve(request) } })
+    this.push({ request, resolve: function () { resolve(request) } })
   }.bind(this))
 }
 
@@ -61,7 +61,17 @@ AxiosRateLimit.prototype.handleResponse = function (response) {
 }
 
 AxiosRateLimit.prototype.push = function (requestHandler) {
-  this.queue.push(requestHandler)
+	var i = 0
+	var n = this.queue.length
+	var priority = requestHandler.request.priority || 0
+	while (i < n && this.queue[i].priority >= priority) {
+		i++
+	}
+	if (i < n) {
+		this.queue.splice(i, 0, requestHandler)
+	} else {
+		this.queue.push(requestHandler)
+	}
   this.shiftInitial()
 }
 
